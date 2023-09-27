@@ -1,6 +1,7 @@
 # Databricks notebook source
 from pyspark.sql.functions import col
 import pyspark.sql.functions as f
+from demo_resources import table_exists
 
 # COMMAND ----------
 
@@ -12,6 +13,11 @@ schema = dbutils.widgets.get('schema')
 
 landed_path = f"/Volumes/{catalog}/{schema}/landing/"
 ingest_path = f"/Volumes/{catalog}/{schema}/ingest/"
+
+# COMMAND ----------
+
+if table_exists(f"{catalog}.{schema}.encounters", spark):
+  dbutils.notebook.exit(0)
 
 # COMMAND ----------
 
@@ -27,8 +33,6 @@ for dir_ in dbutils.fs.ls(landed_path):
 
 encounters = (
   spark.read.parquet(landed_path+'encounters')
-  .withColumn('START', col('START').cast('timestamp'))
-  .withColumn('STOP', col('STOP').cast('timestamp'))
 )
 encounters.createOrReplaceTempView('encounters')
 

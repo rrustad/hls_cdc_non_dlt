@@ -14,6 +14,14 @@ catalog = dbutils.widgets.get('catalog')
 dbutils.widgets.text('schema', 'clarity')
 schema = dbutils.widgets.get('schema')
 
+dbutils.widgets.text('init', 'False')
+init = dbutils.widgets.get('init') == 'True'
+
+# COMMAND ----------
+
+if init == False:
+  dbutils.notebook.exit(1)
+
 # COMMAND ----------
 
 spark.sql(f"""

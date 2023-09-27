@@ -5,7 +5,7 @@ import time
 import collections
 from pyspark.sql.functions import col
 
-def is_folder_empty(folder):
+def is_folder_empty(folder,dbutils):
   try:
     return len(dbutils.fs.ls(folder)) == 0
   except:
