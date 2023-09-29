@@ -6,7 +6,7 @@ resources:
     hls_ingest:
       name: hls_ingest
       job_clusters:
-        - job_cluster_key: job-cluster
+        - job_cluster_key: "[${bundle.environment}] job-cluster"
           new_cluster:
             spark_version: 12.2.x-scala2.12
             node_type_id: Standard_DS3_v2
