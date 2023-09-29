@@ -4,9 +4,9 @@ bundle:
 resources:
   jobs:
     hls_ingest:
-      name: hls_ingest
+      name: "[${bundle.environment}] hls_ingest"
       job_clusters:
-        - job_cluster_key: "[${bundle.environment}] job-cluster"
+        - job_cluster_key: job-cluster
           new_cluster:
             spark_version: 12.2.x-scala2.12
             node_type_id: Standard_DS3_v2
@@ -40,12 +40,7 @@ resources:
           job_cluster_key: job-cluster
           notebook_task:
             notebook_path: ./03-update-tables-non-dlt.py
-        - task_key: update_tables
-          depends_on:
-            - task_key: update_ingest
-          job_cluster_key: job-cluster
-          notebook_task:
-            notebook_path: ./03-update-tables-non-dlt.py
+
 
 environments:
 
