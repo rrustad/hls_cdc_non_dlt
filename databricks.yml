@@ -4,9 +4,9 @@ bundle:
 resources:
   jobs:
     hls_ingest:
-      name: hls_ingest
+      name: "[${bundle.environment}] hls_ingest"
       job_clusters:
-        - job_cluster_key: "[${bundle.environment}] job-cluster"
+        - job_cluster_key: job-cluster
           new_cluster:
             spark_version: 12.2.x-scala2.12
             node_type_id: Standard_DS3_v2
