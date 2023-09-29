@@ -1,0 +1,59 @@
+bundle:
+  name: hls_ingest
+
+resources:
+  jobs:
+    hls_ingest:
+      name: hls_ingest
+      job_clusters:
+        - job_cluster_key: job-cluster
+          new_cluster:
+            spark_version: 12.2.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+      tasks:
+        - task_key: env_setup
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./00-env-setup.py
+        - task_key: download_data
+          depends_on:
+            - task_key: env_setup
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./01-download-data.py
+        - task_key: init_data
+          depends_on:
+            - task_key: download_data
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./02.0-init-historical-data.py
+        - task_key: update_ingest
+          depends_on:
+            - task_key: init_data
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./02.1-ingest-data-update.py
+        - task_key: update_tables
+          depends_on:
+            - task_key: update_ingest
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./03-update-tables-non-dlt.py
+        - task_key: update_tables
+          depends_on:
+            - task_key: update_ingest
+          job_cluster_key: job-cluster
+          notebook_task:
+            notebook_path: ./03-update-tables-non-dlt.py
+
+environments:
+
+  dev:
+    workspace:
+      host: https://adb-984752964297111.11.azuredatabricks.net
+
+
+  prod:
+    workspace:
+      host: https://adb-984752964297111.11.azuredatabricks.net
